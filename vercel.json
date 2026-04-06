@@ -1,3 +1,4 @@
 {
-  "name": "bigadata"
+  "name": "bigadata",
+  "public": true
 }
