@@ -1,0 +1,14 @@
+{
+  "name": "bigadata",
+  "version": "1.0.0",
+  "description": "Big Data Algorithms Code Collection",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Static site - no build needed'",
+    "start": "vercel dev"
+  },
+  "keywords": ["big-data", "algorithms", "code-collection", "minhash", "bloom-filter", "mongodb"],
+  "author": "Your Name",
+  "license": "MIT"
+}

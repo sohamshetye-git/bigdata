@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BigaData - Big Data Algorithms Collection</title>
+    <meta name="description" content="Comprehensive collection of big data algorithms including MinHash, Bloom Filters, AMS, Flajolet-Martin, and more with easy copy functionality.">
+    <meta name="keywords" content="big data, algorithms, minhash, bloom filter, mongodb, collaborative filtering, data science">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>BigaData</h1>
+        <p class="subtitle">Big Data Algorithms Collection</p>
+        
+        <div class="code-section">
+            <h2>MinHash & Jaccard Similarity</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import numpy as np
+
+# 1. Shingles
+def shingle(t, k):
+    return {t[i:i+k] for i in range(len(t)-k+1)}
+
+# 2. Jaccard
+def jac(a, b):
+    return len(a & b) / len(a | b)
+
+# 3. MinHash
+def minhash(s, funcs):
+    return [min(f(x) for x in s) for f in funcs]
+
+# 4. Signature similarity
+def sim(a, b):
+    return sum(i == j for i, j in zip(a, b)) / len(a)
+
+# ------------------
+# MAIN
+# ------------------
+d1, d2 = "DATA", "DATE"
+k = 2
+
+# shingles
+s1, s2 = shingle(d1, k), shingle(d2, k)
+print("Shingles D1:", s1)
+print("Shingles D2:", s2)
+
+# jaccard
+print("Jaccard:", jac(s1, s2))
+
+# convert to numbers
+s1 = {hash(x) % 10 for x in s1}
+s2 = {hash(x) % 10 for x in s2}
+
+# hash functions
+funcs = [lambda x: (x+1)%10,
+         lambda x: (2*x+3)%10]
+
+# signatures
+sig1 = minhash(s1, funcs)
+sig2 = minhash(s2, funcs)
+print("Signature D1:", sig1)
+print("Signature D2:", sig2)
+
+# matrix
+matrix = np.array([sig1, sig2]).T
+print("Signature Matrix:\n", matrix)
+
+# MinHash similarity
+print("MinHash Similarity:", sim(sig1, sig2))</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>Network Analysis & Community Detection</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import networkx as nx
+import matplotlib.pyplot as plt
+from networkx.algorithms.community import girvan_newman
+
+# Create graph
+G = nx.Graph()
+G.add_edges_from([('A','B'), ('A','C'),
+                  ('B','D'), ('B','F'),
+                  ('C','D'), ('C','E')])
+
+# Draw graph
+pos = nx.spring_layout(G)
+nx.draw(G, pos, with_labels=True)
+plt.show()
+
+# Edge Betweenness
+eb = nx.edge_betweenness_centrality(G)
+print("Edge Betweenness:", eb)
+
+# Girvan-Newman (first split)
+comp = girvan_newman(G)
+first = next(comp)
+print("Communities:", [list(c) for c in first])
+
+# Remove highest betweenness edge
+max_edge = max(eb, key=eb.get)
+G.remove_edge(*max_edge)
+print("Removed edge:", max_edge)
+
+# Draw after removal
+nx.draw(G, pos, with_labels=True, node_color='orange')
+plt.show()</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>Collaborative Filtering</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import pandas as pd
+import numpy as np
+from sklearn.neighbors import NearestNeighbors
+
+# Step 1: Create dataframe
+data = {"User1": [5,3,0,4,3,2,0,2,1],
+        "User2": [4,0,5,2,4,0,2,1,3],
+        "User3": [0,2,3,0,4,5,2,3,0],
+        "User4": [3,0,4,5,5,2,0,1,2],
+        "User5": [2,5,3,0,4,5,2,5,4],
+        "User6": [3,2,0,1,1,4,0,2,5],
+        "User7": [4,2,1,3,5,1,5,0,0],
+        "User8": [5,0,3,1,5,2,0,1,5],
+        "User9": [4,1,2,3,5,1,0,0,2],
+        "User10":[3,5,0,1,2,0,0,1,4]}
+
+songs = ["SongA","SongB","SongC","SongD","SondE","SongF","SongG","SongH","SongI"]
+df = pd.DataFrame(data,index=songs)
+print("Original Table")
+print(df)
+
+# Step 2: Row mean (including 0)
+df["Mean"] = df.mean(axis=1)
+print("\nRow Means Added")
+print(df)
+
+# Step 3: Value - Mean
+norm = df.iloc[:,:10].sub(df["Mean"],axis=0)
+print("\nValue - Mean Table")
+print(norm)
+
+# Step 4: Pearson similarity
+similarity = norm.T.corr(method="pearson")
+print("\nPearson Similarity Matrix")
+print(similarity)
+
+# Step 5: KNN (N=2 neighbors + itself)
+model = NearestNeighbors(n_neighbors=4, metric="cosine")
+model.fit(norm)
+distances, indices = model.kneighbors(norm)
+
+# Target
+t_s, t_u = "SongA", "User1"
+
+# Neighbors
+i = songs.index(t_s)
+nbrs = [songs[j] for j in indices[i][1:]]
+
+# Prediction
+num = sum(similarity.loc[t_s,s]*norm.loc[s,t_u] for s in nbrs)
+den = sum(abs(similarity.loc[t_s,s]) for s in nbrs)
+pred = df.loc[t_s,"Mean"] + num/den
+print("Prediction =", round(pred,2))</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>AMS Algorithm</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import random
+
+# given data
+data = [3, 1, 4, 1, 3, 4, 2, 1, 2]
+n = len(data)
+
+# number of samples (k)
+k = 3
+Z = []
+
+# take k random samples (indices)
+samples = random.sample(range(n), k)
+print("Sampled indices:", samples)
+
+for i in samples:
+    x = data[i]              # element at index i
+    
+    # count occurrences from i to end
+    c = 0
+    for j in range(i, n):
+        if data[j] == x:
+            c += 1
+    
+    # AMS formula
+    Zi = n * (2 * c - 1)
+    Z.append(Zi)
+    print(f"Index {i}, Value {x}, c = {c}, Z = {Zi}")
+
+# final AMS estimate
+AMS = sum(Z) / k
+print("\nAMS Estimate:", AMS)</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>Flajolet-Martin Algorithm</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code># hash functions
+def h1(x): return (x + 3) % 12
+def h2(x): return (x + 5) % 8
+def h3(x): return (x + 7) % 56
+def h4(x): return (x + 11) % 48
+def h5(x): return (x + 13) % 36
+def h6(x): return (x * 3 + 1) % 32
+def h7(x): return (x * 5 + 2) % 84
+
+hashes = [h1, h2, h3, h4, h5, h6, h7]
+
+# trailing zeros
+def tz(n):
+    return len(bin(n)) - len(bin(n).rstrip('0'))
+
+# FIXED DATA (use this in exam)
+data = [5, 12, 7, 5, 9, 12, 15, 20]
+R = [0]*len(hashes)
+
+# process data
+for x in data:
+    for i in range(len(hashes)):
+        R[i] = max(R[i], tz(hashes[i](x)))
+
+# estimate
+est = [2**r for r in R]
+final = sum(est)/len(est)
+
+print("R values:", R)
+print("Estimates:", est)
+print("Final Answer:", final)</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>MongoDB Operations</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>use schoolDB
+
+db.students.insertMany([
+    { name: "Sita", age: 18, grade: "A", subjects: ["Math", "Science"] },
+    { name: "Radha", age: 17, grade: "B", subjects: ["English", "History"] },
+    { name: "Raj", age: 18, grade: "A", subjects: ["Math", "English"] }
+])
+
+db.students.find()
+db.students.find({ age: 18 })
+
+db.students.updateOne(
+    { name: "Raj" },
+    {
+        $set: { grade: "B+" },
+        $push: { subjects: "Computer Science" }
+    }
+)
+
+db.students.deleteOne({ name: "Radha" })
+db.students.find({ age: { $gte: 18 } })
+db.students.find({subjects: { $in: ["Math", "History"] }})
+db.students.find({subjects: { $all: ["Math", "English"] }})
+
+db.students.aggregate([
+    {
+        $group: {
+            _id: "$grade",
+            totalStudents: { $sum: 1 }
+        }
+    }
+])
+
+db.students.find({}, { name: 1, subjects: 1, _id: 0 })
+db.students.find({}, { name: 1, age: 1, _id: 0 }).sort({ age: -1 }).limit(2)
+
+db.teachers.insertMany([
+    { _id: 1, name: "Mr. Smith", subject: "Math" },
+    { _id: 2, name: "Ms. Johnson", subject: "English" }
+])
+
+db.students.aggregate([
+    {
+        $lookup: {
+            from: "teachers",
+            localField: "subjects",
+            foreignField: "subject",
+            as: "teacherInfo"
+        }
+    }
+])</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>Bloom Filter</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code># Given bit array (size = 17)
+bit_array = [1,0,0,1,0,1,0,1,1,0,0,0,1,0,1,1,1]
+
+# Hash functions
+def h1(x): return x % 17
+def h2(x): return (2*x + 3) % 17
+
+# Membership check function
+def check(x):
+    index1 = h1(x)
+    index2 = h2(x)
+    print(f"\nChecking {x}:")
+    print(f"h1({x}) = {index1}, bit = {bit_array[index1]}")
+    print(f"h2({x}) = {index2}, bit = {bit_array[index2]}")
+    
+    if bit_array[index1] == 0 or bit_array[index2] == 0:
+        print("Result: Definitely NOT present ")
+    else:
+        print("Result: Possibly present ")
+
+# Check values
+check(5)
+check(15)</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>Advanced Bloom Filter</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import random
+
+m = 500
+k = 7
+bit_array = [0] * m
+
+def h(x, i):
+    return hash((x, i)) % m
+
+# Insert UNIQUE elements
+nums = random.sample(range(1, 1000), 100)
+for num in nums:
+    for i in range(k):
+        index = h(num, i)
+        bit_array[index] = 1
+
+def check_membership(x):
+    for i in range(k):
+        index = h(x, i)
+        if bit_array[index] == 0:
+            return "Definitely NOT present"
+    return "Possibly present"
+
+print(check_membership(nums[0]))   # should be present
+print(check_membership(2000))      # likely not present</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
