@@ -93,10 +93,11 @@ code {
 }
 
 /* Syntax highlighting */
-.keyword { color: #f56565; }
-.string { color: #68d391; }
-.comment { color: #a0aec0; }
-.number { color: #fbb6ce; }
+.keyword { color: #ff6b6b; }
+.string { color: #4ecdc4; }
+.comment { color: #95a5a6; }
+.number { color: #f39c12; }
+.function { color: #9b59b6; }
 
 @media (max-width: 768px) {
     .container {
