@@ -1,16 +1,19 @@
-# BigaData - Big Data Algorithms Collection
+# BigaData - Blockchain & Smart Contract Collection
 
-A comprehensive collection of big data algorithms and code snippets with easy copy functionality.
+A comprehensive collection of blockchain algorithms and smart contract code snippets with easy copy functionality.
 
 ## Features
 
-- **MinHash & Jaccard Similarity** - Document similarity algorithms
-- **Network Analysis** - Community detection with Girvan-Newman
-- **Collaborative Filtering** - Recommendation system implementation
-- **AMS Algorithm** - Approximate counting for data streams
-- **Flajolet-Martin** - Distinct element counting
-- **MongoDB Operations** - Database queries and aggregations
-- **Bloom Filters** - Probabilistic data structures
+- **Basic Blockchain Implementation** - Python blockchain with hashing and blocks
+- **Proof of Work Algorithm** - Mining algorithm implementation
+- **Flask Blockchain API** - REST API for blockchain operations
+- **Solidity Smart Contracts** - Various contract examples including:
+  - Array Sum Contract
+  - Palindrome Checker
+  - Fibonacci Calculator
+  - Basic Calculator
+  - Variables & Global Variables
+  - Struct & Mapping Contract
 
 ## Live Demo
 
@@ -40,4 +43,6 @@ Each code section includes a copy button for easy use in your projects. Simply c
 - HTML5
 - CSS3
 - Vanilla JavaScript
+- Python (Blockchain implementation)
+- Solidity (Smart Contracts)
 - Vercel for deployment
