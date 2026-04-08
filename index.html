@@ -3,276 +3,576 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BigaData - Blockchain & Smart Contract Collection</title>
-    <meta name="description" content="Comprehensive collection of blockchain algorithms and smart contracts including Python blockchain implementation and Solidity contracts.">
-    <meta name="keywords" content="blockchain, smart contracts, solidity, python, cryptocurrency, web3">
+    <title>BigaData - Compiler Design & Language Processing</title>
+    <meta name="description" content="Comprehensive collection of compiler design algorithms including lexical analysis, syntax validation, code generation, and finite automata.">
+    <meta name="keywords" content="compiler design, lexical analysis, syntax validation, finite automata, code generation, parsing">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <h1>BigaData</h1>
-        <p class="subtitle">Blockchain & Smart Contract Collection</p>
+        <p class="subtitle">Compiler Design & Language Processing</p>
         
         <div class="code-section">
-            <h2>Basic Blockchain Implementation</h2>
+            <h2>Java Switch Statement Validator</h2>
             <div class="code-block">
                 <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                <pre><code>import hashlib
-import time
+                <pre><code>import re
 
-class Block:
-    def __init__(self, index, data, previous_hash):
-        self.index = index
-        self.timestamp = time.time()
-        self.data = data
-        self.previous_hash = previous_hash
-        self.hash = self.calculate_hash()
+def validate(filename):
+    code = open(filename).read()
+    code = re.sub(r'//.*', '', code)
+    code = re.sub(r'\s+', ' ', code).strip()
     
-    def calculate_hash(self):
-        value = str(self.index) + str(self.timestamp) + str(self.data) + str(self.previous_hash)
-        return hashlib.sha256(value.encode()).hexdigest()
+    if code.count('{') != code.count('}'):
+        print("Syntax error: Missing braces")
+        return
+    
+    if code.count('(') != code.count(')'):
+        print("Syntax error: Missing parenthesis")
+        return
+    
+    expr = r'\([^()]+\)'
+    stmt = r'[^:{};]+;'
+    case_block = rf'case\s+[^:]+:\s*({stmt}\s*)*(break\s*;)?'
+    default_block = rf'default\s*:\s*({stmt}\s*)+'
+    switch_pattern = rf'''^switch\s*{expr}\s*\{{\s*({case_block}\s*)+{default_block}\s*\}}$'''
+    
+    if re.match(switch_pattern, code, re.VERBOSE):
+        print("Valid Java switch statement")
+    else:
+        print("Invalid Java switch statement")
 
-# Test the block
-block1 = Block(1, "My First Block", "0")
-print("Block Index:", block1.index)
-print("Block Data:", block1.data)
-print("Previous Hash:", block1.previous_hash)
-print("Block Hash:", block1.hash)
-
-transaction = {
-    'sender': 'Alice',
-    'receiver': 'Bob',
-    'amount': 50
-}
-print("Transaction Created:", transaction)
-
-genesis_block = Block(0, "Genesis Block", "0")
-print("Genesis Block Hash:", genesis_block.hash)</code></pre>
+validate('switch.txt')</code></pre>
             </div>
         </div>
 
         <div class="code-section">
-            <h2>Proof of Work Algorithm</h2>
+            <h2>Simple Switch Validator</h2>
             <div class="code-block">
                 <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                <pre><code>def proof_of_work(index, data, previous_hash, difficulty):
-    nonce = 0
+                <pre><code>import re
+
+code = open("switch.txt").read()
+pattern = r"switch\s*\(.*\)\s*\{.*case\s+.*:.*\}"
+
+if re.search(pattern, code, re.S):
+    print("Valid Java switch")
+else:
+    print("Invalid Java switch")</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>Grammar Production Rules Parser</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>def production_rules():
+    rules = []
+    n = int(input("Enter number of production rules: "))
+    for i in range(n):
+        sen = input("Enter production rule: ")
+        rules.append(sen)
+    return rules
+
+production = production_rules()
+print(production)
+
+terminal = []
+non_terminal = []
+
+for i in production:
+    for j in i:
+        if j == '=':
+            continue
+        if j.isupper():
+            non_terminal.append(j)
+        else:
+            terminal.append(j)
+
+print("Terminal:", terminal)
+non_terminal = set(non_terminal)
+print("Non Terminal", non_terminal)
+print("Production Rules:", production)
+print("Starting:", list(non_terminal)[0])</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>Three Address Code Generator (Triplets & Quadruples)</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>def separate(expr):
+    vals, ops = [], []
+    temp = ""
+    for c in expr:
+        if c.isalnum():
+            temp += c
+        else:
+            if temp:
+                vals.append(temp)
+                temp = ""
+            ops.append(c)
+    if temp:
+        vals.append(temp)
+    return vals, ops
+
+expr = input("Enter expression: ").replace(" ", "")
+if "=" in expr:
+    var, expr = expr.split("=")
+else:
+    var = None
+
+vals, ops = separate(expr)
+
+if len(vals) != len(ops) + 1:
+    print("Invalid expression")
+else:
+    print("Operands:", vals)
+    print("Operators:", ops)
+    
+    print("\nTriplets:")
+    t = 1
+    last = ""
+    for i, op in enumerate(ops):
+        if i == 0:
+            last = f"t{t}"
+            print(f"{last} = {vals[0]} {op} {vals[1]}")
+        else:
+            print(f"t{t} = {last} {op} {vals[i+1]}")
+            last = f"t{t}"
+        t += 1
+    
+    print("\nQuadruples:")
+    t = 1
+    last = ""
+    for i, op in enumerate(ops):
+        if i == 0:
+            last = f"t{t}"
+            print(f"({op}, {vals[0]}, {vals[1]}, {last})")
+        else:
+            print(f"({op}, {last}, {vals[i+1]}, t{t})")
+            last = f"t{t}"
+        t += 1
+    
+    if var:
+        print(f"\nFinal: {var} = {last}")</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>Enhanced TAC Generator with Table Format</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>def sep(e):
+    v, o, t = [], [], ""
+    for c in e:
+        if c.isalnum():
+            t += c
+        else:
+            if t:
+                v.append(t)
+                t = ""
+            o.append(c)
+    if t:
+        v.append(t)
+    return v, o
+
+e = input("Enter expression: ").replace(" ", "")
+var = None
+if "=" in e:
+    var, e = e.split("=")
+
+v, o = sep(e)
+
+if len(v) != len(o) + 1:
+    print("Invalid Expression")
+else:
+    print("\n===== TAC =====")
+    last = ""
+    tac_rows = []
+    
+    for i in range(len(o)):
+        t = "T" + str(i + 1)
+        if i == 0:
+            arg1, op, arg2 = v[0], o[0], v[1]
+        else:
+            arg1, op, arg2 = last, o[i], v[i + 1]
+        tac_rows.append((t, arg1, op, arg2))
+        last = t
+    
+    # Print TAC table
+    print("Temp\tArg1\tOp\tArg2")
+    for row in tac_rows:
+        print(f"{row[0]}\t{row[1]}\t{row[2]}\t{row[3]}")
+    
+    if var:
+        print(f"{var} = {last}")
+    
+    print("\n===== Quadruples =====")
+    print("Op\tArg1\tArg2\tResult")
+    last = ""
+    
+    for i in range(len(o)):
+        t = "T" + str(i + 1)
+        if i == 0:
+            arg1, arg2, op = v[0], v[1], o[0]
+        else:
+            arg1, arg2, op = last, v[i + 1], o[i]
+        print(f"{op}\t{arg1}\t{arg2}\t{t}")
+        last = t
+    
+    if var:
+        print(f"=\t{last}\t-\t{var}")</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>Symbol Table Generator</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import random
+
+table = {}
+
+print("Enter code (type 'end' to stop):")
+while True:
+    line = input().strip()
+    if line == "end":
+        break
+    
+    line = line.replace(" ", "").rstrip(";")
+    
+    # -------- DECLARATION --------
+    if line.startswith(("int", "float", "char")):
+        if line.startswith("int"):
+            var_type = "int"
+            vars_part = line[3:]
+        elif line.startswith("float"):
+            var_type = "float"
+            vars_part = line[5:]
+        else:
+            var_type = "char"
+            vars_part = line[4:]
+        
+        variables = vars_part.split(",")
+        for var in variables:
+            table[var] = {
+                "type": var_type,
+                "addr": random.randint(1000, 9999),
+                "defined": 1,
+                "used": 0
+            }
+    else:
+        parts = line.split("=")
+        if len(parts) >= 2:
+            left = parts[0]
+            if left not in table:
+                table[left] = {
+                    "type": "unknown",
+                    "addr": random.randint(1000, 9999),
+                    "defined": 0,
+                    "used": 1
+                }
+        
+        for var in table:
+            if var in line:
+                table[var]["used"] = 1
+
+print("\nSymbol Table:")
+print("Name\tType\tAddr\tDefined\tUsed")
+for name, info in table.items():
+    print(f"{name}\t{info['type']}\t{info['addr']}\t{info['defined']}\t{info['used']}")</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>Compact Symbol Table Generator</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import random, re
+
+tab = {}
+
+while True:
+    line = input().strip()
+    if line == "end": 
+        break
+    
+    line = line.replace(" ", "").rstrip(";")
+    
+    if line.startswith(("int","float","char")):
+        t = "int" if line.startswith("int") else "float" if line.startswith("float") else "char"
+        for v in line[len(t):].split(","):
+            tab[v] = {"type":t, "addr":random.randint(1000,9999), "defined":1, "used":0}
+    else:
+        vars = re.findall(r"[a-zA-Z]+", line)
+        for v in vars:
+            if v not in tab:
+                tab[v] = {"type":"unknown","addr":random.randint(1000,9999),"defined":0,"used":1}
+            else:
+                tab[v]["used"] = 1
+
+print("\nName\tType\tAddr\tDef\tUse")
+for k,v in tab.items():
+    print(k, v["type"], v["addr"], v["defined"], v["used"], sep="\t")</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>Three Address to Mnemonic Code Converter</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>def convert_to_mnemonic(line):
+    line = line.replace(" ", "")
+    if "=" not in line:
+        return "Invalid"
+    
+    left, right = line.split("=")
+    
+    # Case 1: Simple assignment → a = b
+    if right.isalnum():
+        return f"MOV {left}, {right}"
+    
+    # Case 2: Binary operation → a = b + c
+    for op in ['+', '-', '*', '/']:
+        if op in right:
+            op1, op2 = right.split(op)
+            if op == '+':
+                return f"MOV R1, {op1}\nADD R1, {op2}\nMOV {left}, R1"
+            elif op == '-':
+                return f"MOV R1, {op1}\nSUB R1, {op2}\nMOV {left}, R1"
+            elif op == '*':
+                return f"MOV R1, {op1}\nMUL R1, {op2}\nMOV {left}, R1"
+            elif op == '/':
+                return f"MOV R1, {op1}\nDIV R1, {op2}\nMOV {left}, R1"
+    
+    return "Invalid"
+
+print("Enter 3-address code (type 'end' to stop):")
+while True:
+    line = input()
+    if line == "end":
+        break
+    print("\nMnemonic Code:")
+    print(convert_to_mnemonic(line))</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>Assembly Code Validator</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code># Opcode table
+optab = {"MOV":1, "ADD":2, "SUB":3, "MUL":4, "DIV":5, "LOAD":6, "STORE":7}
+
+def validate(file):
+    f = open(file)
+    for i, line in enumerate(f, 1):
+        line = line.strip()
+        if line == "" or line.startswith(";"):
+            continue
+        
+        m = line.split()[0].upper()
+        if m in optab:
+            print("Line", i, ": VALID", optab[m])
+        else:
+            print("Line", i, ": ERROR")
+    f.close()
+
+# call
+validate("assembly.txt")</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>Regular Expression Pattern Validators</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import re
+
+# Pattern 1: ccbbaa
+pattern1 = r"cc[a|b|c]*bb[a|b|c]*aa$"
+string1 = input("Enter a string for pattern ccbbaa: ")
+if re.fullmatch(pattern1, string1):
+    print("Valid string")
+else:
+    print("Invalid string")
+
+# Pattern 2: Binary ending with 0
+pattern2 = r"[0|1][0|1][0]$"
+string2 = input("Enter a string for binary ending with 0: ")
+if re.fullmatch(pattern2, string2):
+    print("Valid string")
+else:
+    print("Invalid string")
+
+# Pattern 3: Ending with cba
+pattern3 = r"[a|b|c]*cba$"
+string3 = input("Enter a string ending with cba: ")
+if re.fullmatch(pattern3, string3):
+    print("Valid string")
+else:
+    print("Invalid string")
+
+# Pattern 4: Starting with 1
+pattern4 = r"[1][0|1]*$"
+string4 = input("Enter a binary string starting with 1: ")
+if re.fullmatch(pattern4, string4):
+    print("Valid string")
+else:
+    print("Invalid string")</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>Java Loop Validator</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import re
+
+def validate_loops(filename):
+    code = open(filename).read()
+    code = re.sub(r'//.*', '', code)
+    code = re.sub(r'\s+', ' ', code).strip()
+    
+    while_pattern = r'while\s*\([^()]+\)\s*\{[^{}]*\}'
+    for_pattern = r'for\s*\([^;]+;[^;]+;[^()]+\)\s*\{[^{}]*\}'
+    do_while_pattern = r'do\s*\{[^{}]*\}\s*while\s*\([^()]+\)\s*;'
+    
+    if code.count('{') != code.count('}'):
+        print("Syntax error: Missing braces")
+        return
+    
+    found = False
+    
+    for match in re.findall(while_pattern, code):
+        print("Valid Java while loop")
+        found = True
+    
+    for match in re.findall(for_pattern, code):
+        print("Valid Java for loop")
+        found = True
+    
+    for match in re.findall(do_while_pattern, code):
+        print("Valid Java do-while loop")
+        found = True
+    
+    if not found:
+        print("No valid Java loops found")
+
+validate_loops('loop.txt')</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>Java If-Else Validator</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import re
+
+def validate(filename):
+    code = open(filename).read()
+    code = re.sub(r'//.*', '', code)
+    code = re.sub(r'\s+', ' ', code).strip()
+    
+    pattern = r'^if\s*\([^()]+\)\s*\{[^{}]*\}(\s*else\s*\{[^{}]*\})?$'
+    
+    if code.count('{') != code.count('}'):
+        print("Syntax error: Missing braces")
+        return
+    
+    if re.match(pattern, code):
+        print("Valid Java if-else statement")
+    else:
+        print("Invalid Java statement")
+
+validate('ifelse.txt')</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <h2>Finite Automata String Validator</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import numpy as np
+
+transition = {}
+
+while True:
+    states = input("Enter states (and type 'done' to finish): ")
+    if states.lower() == 'done':
+        break
+    transition[states] = {}
+
+for outer_key in transition:
+    print(f"\nNow entering details for '{outer_key}':")
     while True:
-        guess = f"{index}{data}{previous_hash}{nonce}"
-        guess_hash = hashlib.sha256(guess.encode()).hexdigest()
-        if guess_hash[:difficulty] == '0' * difficulty:
-            return nonce, guess_hash
-        nonce += 1
+        inner_key = input(f"Enter symbol for '{outer_key}' (type 'done' to finish): ")
+        if inner_key.lower() == 'done':
+            break
+        inner_value = input(f"Enter the state for '{inner_key}': ")
+        transition[outer_key][inner_key] = inner_value
 
-nonce, hash_val = proof_of_work(1, "Test Block", "0", 4)
-print("Nonce Found:", nonce)
-print("Hash with Proof of Work:", hash_val)</code></pre>
+print(transition)
+
+start_state = input("Enter the Start state:")
+final_state = input("Enter the final state:")
+strr = input("Enter the string")
+
+def traverse(start_state, final_state, strr, transition):
+    current_state = start_state
+    for symbol in strr:
+        if symbol not in transition[current_state]:
+            print(f"{symbol} is not valid for {current_state} state")
+            return False
+        current_state = transition[current_state][symbol]
+        print(f"On symbol '{symbol}' → moved to '{current_state}'")
+    return current_state == final_state
+
+if traverse(start_state, final_state, strr, transition):
+    print("\nString accepted: final state reached ")
+else:
+    print("\nString rejected: final state NOT reached ")</code></pre>
             </div>
         </div>
 
         <div class="code-section">
-            <h2>Flask Blockchain API</h2>
+            <h2>Python Syntax Validator</h2>
             <div class="code-block">
                 <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                <pre><code>import hashlib
-import time
-from flask import Flask, jsonify
+                <pre><code>import ast
 
-class Block:
-    def __init__(self, index, data, previous_hash):
-        self.index = index
-        self.timestamp = time.time()
-        self.data = data
-        self.previous_hash = previous_hash
-        self.hash = self.calculate_hash()
-    
-    def calculate_hash(self):
-        value = str(self.index) + str(self.timestamp) + str(self.data) + str(self.previous_hash)
-        return hashlib.sha256(value.encode()).hexdigest()
+def c(code, name):
+    print(name)
+    try:
+        ast.parse(code)
+        print("valid")
+    except SyntaxError as e:
+        print(f"msg:{e.msg} line{e.lineno}")
 
-app = Flask(__name__)
-blockchain = []
+code2 = """for i in range(5):
+    print(i")"""
 
-@app.route('/create_genesis', methods=['GET'])
-def create_genesis():
-    if len(blockchain) == 0:
-        genesis = Block(0, "Genesis Block", "0")
-        blockchain.append(genesis)
-        return jsonify({
-            "message": "Genesis block created",
-            "hash": genesis.hash
-        })
-    return jsonify({"message": "Genesis block already exists"})
-
-@app.route('/chain', methods=['GET'])
-def get_chain():
-    chain_data = []
-    for block in blockchain:
-        chain_data.append({
-            "index": block.index,
-            "timestamp": block.timestamp,
-            "data": block.data,
-            "previous_hash": block.previous_hash,
-            "hash": block.hash
-        })
-    return jsonify(chain_data)
-
-if __name__ == '__main__':
-    app.run(debug=True)</code></pre>
+c(code2, "Code 2")</code></pre>
             </div>
         </div>
 
         <div class="code-section">
-            <h2>Solidity - Array Sum Contract</h2>
+            <h2>Python Tokenizer (Keywords & Identifiers)</h2>
             <div class="code-block">
                 <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                <pre><code>// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+                <pre><code>import tokenize
+import keyword
 
-contract Total {
-    function total(uint[] memory array) public pure returns(uint) {
-        uint total = 0;
-        for(uint i = 0; i < array.length; i++) {
-            total += array[i];
-        }
-        return total;
-    }
-}</code></pre>
-            </div>
-        </div>
-
-        <div class="code-section">
-            <h2>Solidity - Palindrome Checker</h2>
-            <div class="code-block">
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                <pre><code>// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-contract Palindrome {
-    function isPalindrome(uint num) public pure returns (bool) {
-        uint original = num;
-        uint reverse = 0;
-        
-        while(num > 0) {
-            uint digit = num % 10;
-            reverse = reverse * 10 + digit;
-            num = num / 10;
-        }
-        
-        return original == reverse;
-    }
-}</code></pre>
-            </div>
-        </div>
-
-        <div class="code-section">
-            <h2>Solidity - Fibonacci Contract</h2>
-            <div class="code-block">
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                <pre><code>// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-contract Fibonacci {
-    function fib(uint n) public pure returns (uint) {
-        if (n == 0) return 0;
-        if (n == 1) return 1;
-        
-        uint a = 0;
-        uint b = 1;
-        uint c;
-        
-        for(uint i = 2; i <= n; i++) {
-            c = a + b;
-            a = b;
-            b = c;
-        }
-        
-        return c;
-    }
-}</code></pre>
-            </div>
-        </div>
-
-        <div class="code-section">
-            <h2>Solidity - Calculator Contract</h2>
-            <div class="code-block">
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                <pre><code>// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-contract Calculator {
-    function calc(uint a, uint b) public pure returns (uint, int, uint, uint, uint) {
-        uint sum = a + b;
-        int sub = int(a) - int(b);
-        uint mul = a * b;
-        uint divi = 0;
-        uint mod = 0;
-        
-        if (b != 0) {
-            divi = a / b;
-            mod = a % b;
-        }
-        
-        return (sum, sub, mul, divi, mod);
-    }
-}</code></pre>
-            </div>
-        </div>
-
-        <div class="code-section">
-            <h2>Solidity - Variables & Global Variables</h2>
-            <div class="code-block">
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                <pre><code>// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
-
-contract Variables {
-    // State variables (stored on blockchain)
-    string public text = "hello";
-    uint public num = 123;
-    
-    function doSomething() public view {
-        uint i = 456;
-        
-        // Global variables
-        uint timestamp = block.timestamp; // current time
-        address sender = msg.sender;      // caller address
-    }
-}</code></pre>
-            </div>
-        </div>
-
-        <div class="code-section">
-            <h2>Solidity - Struct & Mapping Contract</h2>
-            <div class="code-block">
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                <pre><code>// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
-
-contract MyContract {
-    uint256 public peopleCount = 0;
-    
-    // Mapping from uint to Person struct
-    mapping(uint => Person) public people;
-    
-    // Define a struct for Person
-    struct Person {
-        uint id;
-        string firstName;
-        string lastName;
-    }
-    
-    // Function to add a new person
-    function addPerson(string memory firstName, string memory lastName) public {
-        incrementCount(); // Increase the count
-        people[peopleCount] = Person(peopleCount, firstName, lastName); // Store person
-    }
-    
-    // Internal function to increment the count
-    function incrementCount() internal {
-        peopleCount += 1;
-    }
-}</code></pre>
+with open("input.txt", "rb") as f:
+    tokens = tokenize.tokenize(f.readline)
+    for tok in tokens:
+        if tok.type == tokenize.NAME:
+            if tok.string in keyword.kwlist:
+                print(tok.string, "-> Keyword")
+            else:
+                print(tok.string, "-> Identifier")</code></pre>
             </div>
         </div>
     </div>
