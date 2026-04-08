@@ -14,6 +14,39 @@
         <p class="subtitle">Compiler Design & Language Processing</p>
         
         <div class="code-section">
+            <h2>Compact Symbol Table Generator</h2>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code>import random, re
+
+tab = {}
+
+while True:
+    line = input().strip()
+    if line == "end": 
+        break
+    
+    line = line.replace(" ", "").rstrip(";")
+    
+    if line.startswith(("int","float","char")):
+        t = "int" if line.startswith("int") else "float" if line.startswith("float") else "char"
+        for v in line[len(t):].split(","):
+            tab[v] = {"type":t, "addr":random.randint(1000,9999), "defined":1, "used":0}
+    else:
+        vars = re.findall(r"[a-zA-Z]+", line)
+        for v in vars:
+            if v not in tab:
+                tab[v] = {"type":"unknown","addr":random.randint(1000,9999),"defined":0,"used":1}
+            else:
+                tab[v]["used"] = 1
+
+print("\nName\tType\tAddr\tDef\tUse")
+for k,v in tab.items():
+    print(k, v["type"], v["addr"], v["defined"], v["used"], sep="\t")</code></pre>
+            </div>
+        </div>
+
+        <div class="code-section">
             <h2>Java Switch Statement Validator</h2>
             <div class="code-block">
                 <button class="copy-btn" onclick="copyCode(this)">Copy</button>
@@ -283,39 +316,6 @@ print("\nSymbol Table:")
 print("Name\tType\tAddr\tDefined\tUsed")
 for name, info in table.items():
     print(f"{name}\t{info['type']}\t{info['addr']}\t{info['defined']}\t{info['used']}")</code></pre>
-            </div>
-        </div>
-
-        <div class="code-section">
-            <h2>Compact Symbol Table Generator</h2>
-            <div class="code-block">
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                <pre><code>import random, re
-
-tab = {}
-
-while True:
-    line = input().strip()
-    if line == "end": 
-        break
-    
-    line = line.replace(" ", "").rstrip(";")
-    
-    if line.startswith(("int","float","char")):
-        t = "int" if line.startswith("int") else "float" if line.startswith("float") else "char"
-        for v in line[len(t):].split(","):
-            tab[v] = {"type":t, "addr":random.randint(1000,9999), "defined":1, "used":0}
-    else:
-        vars = re.findall(r"[a-zA-Z]+", line)
-        for v in vars:
-            if v not in tab:
-                tab[v] = {"type":"unknown","addr":random.randint(1000,9999),"defined":0,"used":1}
-            else:
-                tab[v]["used"] = 1
-
-print("\nName\tType\tAddr\tDef\tUse")
-for k,v in tab.items():
-    print(k, v["type"], v["addr"], v["defined"], v["used"], sep="\t")</code></pre>
             </div>
         </div>
 
